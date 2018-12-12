@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  redis-master:
+    build: ./master
+    expose: 
+      - 7379
+    restart: always
+    networks:
+      - test_redis_master_slave
+  redis-slave1:
+    build: ./slave1
+    expose: 
+      - 6381
+    networks: 
+      - test_redis_master_slave
+  redis-slave2:
+    build: ./slave2
+    expose: 
+      - 6382
+    networks: 
+      - test_redis_master_slave
+  redis-slave3:
+    build: ./slave3
+    expose: 
+      - 6383
+    networks: 
+      - test_redis_master_slave
+
+networks:
+  test_redis_master_slave:

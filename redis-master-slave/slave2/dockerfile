@@ -1,0 +1,13 @@
+FROM redis
+
+EXPOSE 6382
+
+RUN mkdir /app
+
+WORKDIR /app
+
+COPY redis.conf redis.conf
+
+VOLUME [ "/app" ]
+
+CMD [ "redis-server","/app/redis.conf" ]
