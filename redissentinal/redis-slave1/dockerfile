@@ -1,0 +1,12 @@
+FROM redis
+
+EXPOSE 6381
+
+RUN mkdir /app
+
+WORKDIR /app
+
+COPY redis.conf redis.conf
+
+
+CMD [ "redis-server","/app/redis.conf" ]

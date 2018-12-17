@@ -1,0 +1,74 @@
+version: '3'
+
+services:
+  redis-slave1:
+    restart: always
+    build: ./redis-slave1
+    expose:
+      - "6381"
+    depends_on:
+      - redis-master
+    networks:
+      - test_redis_sentinel
+
+  redis-slave2:
+    restart: always
+    build: ./redis-slave2
+    depends_on:
+      - redis-master
+    expose:
+      - "6382"
+    networks:
+      - test_redis_sentinel
+
+  redis-slave3:
+    restart: always
+    build: ./redis-slave3
+    depends_on:
+      - redis-master
+    expose:
+      - "6383"
+    networks:
+      - test_redis_sentinel
+  
+  redis-master:
+    restart: always
+    build: ./redis-master
+    networks:
+      - test_redis_sentinel
+    expose:
+      - "6379"
+
+  redis-sentinel1:
+    build: ./redis-sentinel1
+    networks:
+      - test_redis_sentinel
+    depends_on:
+      - redis-slave1
+      - redis-slave2
+      - redis-slave3
+    expose:
+      - "26379"
+
+  redis-sentinel2:
+    build: ./redis-sentinel2
+    networks:
+      - test_redis_sentinel
+    depends_on:
+      - redis-slave1
+      - redis-slave2
+      - redis-slave3
+    expose:
+      - "26379"
+
+  test_app:
+    restart: always
+    depends_on:
+      - redis-sentinel1
+      - redis-sentinel2
+    build: ./src
+    networks:
+      - test_redis_sentinel
+
+networks:
+  test_redis_sentinel:
